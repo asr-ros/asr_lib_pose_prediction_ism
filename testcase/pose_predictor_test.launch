@@ -1,0 +1,14 @@
+<launch>
+  <node name="pose_prediction_test" pkg="asr_lib_pose_prediction_ism" type="pose_prediction_test" output="screen">
+
+    <!-- Path to DIRECTORY of DBs, all files in that directory have to be a Database -->
+    <param name="input_path" value=""/>
+
+    <!-- Path to outputfile. (*.csv) -->
+    <param name="output_path" value=""/>
+
+    <!-- Number of iteration -->
+    <param name="iteration" value="10"/>
+
+    </node>
+</launch>

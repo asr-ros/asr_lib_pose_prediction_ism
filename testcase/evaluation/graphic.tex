@@ -1,0 +1,174 @@
+\documentclass[paper=a4,12pt,version=last]{scrartcl}
+
+\usepackage{siunitx}
+\usepackage{tikz} % To generate the plot from csv
+\usepackage{pgfplots, pgfplotstable}
+\usepackage{sansmath}
+
+\pgfplotsset{compat=newest} % Allows to place the legend below plot
+\usepgfplotslibrary{units} % Allows to enter the units nicely
+
+
+
+\sisetup{
+  round-mode=places,
+  round-precision=2,
+}
+
+\pgfplotsset{
+    discard if not/.style 2 args={
+        x filter/.code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+            \else
+                \def\pgfmathresult{inf}
+            \fi
+        }
+    }
+}
+
+\pgfplotsset{%
+  /tikz/font=\sansmath\sffamily\boldmath\bfseries
+}
+
+\pgfplotstablesort[col sep=comma, sort key=objects, sort cmp=int <]{\data}{pp_avg.csv}
+\pgfplotstablesave[col sep=comma,string type,columns={objects,sets,treesize,nonnormalized,shortestpath}]{\data}{sorted.csv}
+
+\begin{document}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+	  ytick style={draw=none},
+	  outer axis line style={draw=none},
+	  inner axis line style={draw=none},
+	  xticklabel style={yshift=10},
+	  x tick style={yshift=10},
+	  xtick align=center,
+	  xtick pos=left,
+	  height=250,
+          width=\linewidth, % Scale the plot to \linewidth
+	  ymajorgrids=true,
+          xlabel=Objects, % Set the labels
+          ylabel=runtime,
+          y unit=\si{\second},
+          legend columns=4,
+          %legend pos=outer north east,
+          legend style={at={(0.5,-0.2)}, anchor=north}, % Put the legend below the plot
+        ]
+        \addplot[discard if not={sets}{100}, line width=4pt, red] table[x=objects,y=nonnormalized,col sep=comma]{sorted.csv}; 
+        \addplot[discard if not={sets}{200}, line width=4pt, gray] table[x=objects,y=nonnormalized,col sep=comma]{sorted.csv}; 
+        \addplot[discard if not={sets}{300}, line width=4pt, green] table[x=objects,y=nonnormalized,col sep=comma]{sorted.csv}; 
+        \addplot[discard if not={sets}{400}, line width=4pt, blue] table[x=objects,y=nonnormalized,col sep=comma]{sorted.csv}; 
+        \legend{Setsize=$100$,Setsize=$200$,Setsize=$300$,Setsize=$400$}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{\textbf{Runtime of non-normalized poseprediction depending on object and setsize.}}
+  \end{center}
+\end{figure}
+
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+	  ytick style={draw=none},
+	  outer axis line style={draw=none},
+	  inner axis line style={draw=none},
+	  xticklabel style={yshift=10},
+	  x tick style={yshift=10},
+	  xtick align=center,
+	  xtick pos=left,
+	  height=250,
+          width=\linewidth, % Scale the plot to \linewidth
+	  ymajorgrids=true,
+          xlabel=Objects, % Set the labels
+          ylabel=runtime,
+          y unit=\si{\second},
+          legend columns=4,
+          %legend pos=outer north east,
+          legend style={at={(0.5,-0.2)}, anchor=north}, % Put the legend below the plot
+        ]
+        \addplot[discard if not={sets}{100}, line width=4pt, red] table[x=objects,y=shortestpath,col sep=comma]{sorted.csv}; 
+        \addplot[discard if not={sets}{200}, line width=4pt, gray] table[x=objects,y=shortestpath,col sep=comma]{sorted.csv}; 
+        \addplot[discard if not={sets}{300}, line width=4pt, green] table[x=objects,y=shortestpath,col sep=comma]{sorted.csv}; 
+        \addplot[discard if not={sets}{400}, line width=4pt, blue] table[x=objects,y=shortestpath,col sep=comma]{sorted.csv}; 
+        \legend{Setsize=$100$,Setsize=$200$,Setsize=$300$,Setsize=$400$}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{\textbf{Runtime of shortest-path poseprediction depending on object and setsize.}}
+  \end{center}
+\end{figure}
+
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+	  ytick style={draw=none},
+	  outer axis line style={draw=none},
+	  inner axis line style={draw=none},
+	  xticklabel style={yshift=10},
+	  x tick style={yshift=10},
+	  xtick align=center,
+	  xtick pos=left,
+	  height=500,
+          width=\linewidth, % Scale the plot to \linewidth
+	  ymajorgrids=true,
+          xlabel=Objects, % Set the labels
+          ylabel=runtime,
+          y unit=\si{\second},
+          legend columns=4,
+          %legend pos=outer north east,
+          legend style={at={(0.5,-0.2)}, anchor=north}, % Put the legend below the plot
+        ]
+        \addplot[discard if not={sets}{100}, only marks, mark=*, red] table[x=objects,y=nonnormalized,col sep=comma]{pp_total.csv};
+        \addplot[discard if not={sets}{200}, only marks, mark=*, gray] table[x=objects,y=nonnormalized,col sep=comma]{pp_total.csv}; 
+        \addplot[discard if not={sets}{300}, only marks, mark=*, green] table[x=objects,y=nonnormalized,col sep=comma]{pp_total.csv}; 
+        \addplot[discard if not={sets}{400}, only marks, mark=*, blue] table[x=objects,y=nonnormalized,col sep=comma]{pp_total.csv}; 
+        \legend{Setsize=$100$,Setsize=$200$,Setsize=$300$,Setsize=$400$}
+
+      \end{axis}
+    \end{tikzpicture}
+    %\caption{\textbf{Runtime of shortest-path poseprediction depeding on object and setsize}}
+  \end{center}
+\end{figure}
+
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+	  ytick style={draw=none},
+	  outer axis line style={draw=none},
+	  inner axis line style={draw=none},
+	  xticklabel style={yshift=10},
+	  x tick style={yshift=10},
+	  xtick align=center,
+	  xtick pos=left,
+	  height=500,
+          width=\linewidth, % Scale the plot to \linewidth
+	  ymajorgrids=true,
+          xlabel=Objects, % Set the labels
+          ylabel=runtime,
+          y unit=\si{\second},
+          legend columns=4,
+          %legend pos=outer north east,
+          ymin=0,
+          legend style={at={(0.5,-0.2)}, anchor=north}, % Put the legend below the plot
+        ]
+        \addplot[discard if not={sets}{100}, only marks, mark=*, red] table[x=objects,y=shortestpath,col sep=comma]{pp_total.csv};
+        \addplot[discard if not={sets}{200}, only marks, mark=*, gray] table[x=objects,y=shortestpath,col sep=comma]{pp_total.csv}; 
+        \addplot[discard if not={sets}{300}, only marks, mark=*, green] table[x=objects,y=shortestpath,col sep=comma]{pp_total.csv}; 
+        \addplot[discard if not={sets}{400}, only marks, mark=*, blue] table[x=objects,y=shortestpath,col sep=comma]{pp_total.csv}; 
+        \legend{Setsize=$100$,Setsize=$200$,Setsize=$300$,Setsize=$400$}
+
+      \end{axis}
+    \end{tikzpicture}
+    %\caption{\textbf{Runtime of shortest-path poseprediction depeding on object and setsize}}
+  \end{center}
+\end{figure}
+
+\end{document}
