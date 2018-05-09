@@ -24,18 +24,18 @@ namespace pose_prediction_ism
 class BestPath: public PredictorWithScore
 {
 public:
-    BestPath(string database_filename);
+    BestPath(std::string database_filename);
     ~BestPath();
-    AttributedPointCloud predictUnfoundPoses(ISM::PosePtr &reference_pose, string pattern_name, double percentage_of_records_for_prediction);
+    AttributedPointCloud predictUnfoundPoses(ISM::PosePtr &reference_pose, std::string pattern_name, double percentage_of_records_for_prediction);
 
 private:
-    typedef Map<IsmObject, PathWithScore> BestPathMap;
+    typedef std::map<IsmObject, PathWithScore> BestPathMap;
 
     /* ----------------- Private members ------------------  */
     BestPathMap best_path_map_;
 
     /* ----------------- Functions ------------------  */
-    void createBestPathMap(string type, IsmObjects predecessors);
+    void createBestPathMap(std::string type, IsmObjects predecessors);
     void createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, double percentage_of_records_for_prediction);
 
     double calculatePathScore(IsmObjects path);

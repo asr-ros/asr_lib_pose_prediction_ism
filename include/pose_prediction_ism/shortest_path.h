@@ -24,18 +24,18 @@ namespace pose_prediction_ism
 class ShortestPath : public PosePredictor
 {
 public:
-    ShortestPath(string database_filename);
+    ShortestPath(std::string database_filename);
     ~ShortestPath();
 
-    AttributedPointCloud predictUnfoundPoses(ISM::PosePtr &reference_pose, string pattern_name, double percentage_of_records_for_prediction);
+    AttributedPointCloud predictUnfoundPoses(ISM::PosePtr &reference_pose, std::string pattern_name, double percentage_of_records_for_prediction);
 private:
-    typedef Map<IsmObject , IsmObjects> ShortestPathMap;
+    typedef std::map<IsmObject , IsmObjects> ShortestPathMap;
 
     /* ----------------- Private members ------------------  */
     ShortestPathMap shortest_path_map_;
 
     /* ----specifiers_size_map_ctions ------------------  */
-    void createShortestPathMap(string type, IsmObjects paths);
+    void createShortestPathMap(std::string type, IsmObjects paths);
     void createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, double percentage_of_records_for_prediction);
 
     /* ----------------- Debug Functions ------------------  */

@@ -42,7 +42,7 @@ PaperPredictionNonNormalized::~PaperPredictionNonNormalized()
 
 void PaperPredictionNonNormalized::calculateRecursiveUnfoundPoses(ISM::PosePtr &referencePose,
                                                                   std::string patternName,
-                                                                  local_uint weight)
+                                                                  unsigned int weight)
 {
     ROS_DEBUG_STREAM("" << referencePose);
     IsmObjectSet objectsInPattern = getObjectTypesAndIdsBelongingToPattern(patternName);
@@ -87,7 +87,7 @@ void PaperPredictionNonNormalized::calculateRecursiveUnfoundPoses(ISM::PosePtr &
         }
     }
 }
-bool PaperPredictionNonNormalized::nonReferenceObjectProcessing(IsmObject object, ISM::VoteSpecifierPtr specifier, ISM::PosePtr &referencePose, local_uint weight, local_uint specifiersSize)
+bool PaperPredictionNonNormalized::nonReferenceObjectProcessing(IsmObject object, ISM::VoteSpecifierPtr specifier, ISM::PosePtr &referencePose, unsigned int weight, unsigned int specifiersSize)
 {
     using namespace ISM;
     PointPtr absPosition = GeometryHelper::getSourcePoint(referencePose,
@@ -99,7 +99,7 @@ bool PaperPredictionNonNormalized::nonReferenceObjectProcessing(IsmObject object
     if(ISM::GeometryHelper::poseEqual(referencePose, absPose))
     {
 
-        local_uint numberOfHypotheses = weight * specifiersSize;
+        unsigned int numberOfHypotheses = weight * specifiersSize;
         addPointToPointCloudWithNumber(absPose, object, numberOfHypotheses);
         return true;
     }
@@ -112,8 +112,8 @@ bool PaperPredictionNonNormalized::nonReferenceObjectProcessing(IsmObject object
 bool PaperPredictionNonNormalized::referenceObjectProcessing(std::string objectType,
                                                              ISM::VoteSpecifierPtr specifier,
                                                              ISM::PosePtr &referencePose,
-                                                             local_uint weight,
-                                                             local_uint specifiersSize)
+                                                             unsigned int weight,
+                                                             unsigned int specifiersSize)
 {
     //ROS_INFO("Object %s is a reference object", objectType.c_str());
     using namespace ISM;
@@ -126,7 +126,7 @@ bool PaperPredictionNonNormalized::referenceObjectProcessing(std::string objectT
     if(GeometryHelper::poseEqual(referencePose, absPose))
     {
         ROS_DEBUG("Object %s  is identical to the reference of the ism in which it is object", objectType.c_str());
-        local_uint numberOfHypotheses = specifiersSize * weight;
+        unsigned int numberOfHypotheses = specifiersSize * weight;
         //ROS_DEBUG_STREAM("numberOfHypotheses: " << numberOfHypotheses << " weight: " << weight << " percentage: " << percentage);
         calculateRecursiveUnfoundPoses(absPose, objectType, numberOfHypotheses);
         return true;
@@ -143,7 +143,7 @@ void PaperPredictionNonNormalized::createAttributedPointCloud(ISM::PosePtr refer
 {
 
 }
-void PaperPredictionNonNormalized::addPointToPointCloudWithNumber(ISM::PosePtr poseToAdd, IsmObject object, local_uint numberOfHypotheses)
+void PaperPredictionNonNormalized::addPointToPointCloudWithNumber(ISM::PosePtr poseToAdd, IsmObject object, unsigned int numberOfHypotheses)
 {
     addPointToPointCloud(poseToAdd, object.first, object.second);
 }

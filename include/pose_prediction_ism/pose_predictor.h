@@ -46,12 +46,12 @@ namespace pose_prediction_ism
   class PosePredictor
   {
   protected:
-    typedef Tupel<string, string> IsmObject;
-    typedef List<IsmObject> IsmObjects;
-    typedef Set<IsmObject> IsmObjectSet;
+    typedef std::pair<std::string, std::string> IsmObject;
+    typedef std::vector<IsmObject> IsmObjects;
+    typedef std::set<IsmObject> IsmObjectSet;
 
-    PosePredictor(string database_filename,
-                  string name_space,
+    PosePredictor(std::string database_filename,
+                  std::string name_space,
                   PredictorType predictor_type);
     /**
        Destructor.
@@ -83,7 +83,7 @@ namespace pose_prediction_ism
      * @param reference_pose
      * @param pattern_name
      */
-    AttributedPointCloud virtual predictUnfoundPoses(ISM::PosePtr& reference_pose, string pattern_name, double percentage_of_records_for_prediction) = 0;
+    AttributedPointCloud virtual predictUnfoundPoses(ISM::PosePtr& reference_pose, std::string pattern_name, double percentage_of_records_for_prediction) = 0;
     inline void clearPointCloud()
     {
       attributed_point_cloud_.elements.clear();
@@ -102,7 +102,7 @@ namespace pose_prediction_ism
     }
 
     /* ----------------- Debug ------------------  */
-    void traverseISM(string pattern_name, local_uint level) ;
+    void traverseISM(std::string pattern_name, unsigned int level) ;
 
     inline void enableRandom(double sphere_radius, double max_projection_angle){
       USE_RANDOMS = true;
@@ -122,7 +122,7 @@ namespace pose_prediction_ism
     PredictorType getPredictorType() const;
 
   protected:
-    typedef Map<IsmObject , local_uint> SizeMap;
+    typedef std::map<IsmObject , unsigned int> SizeMap;
     typedef boost::variate_generator<boost::mt19937, boost::uniform_real<> > UniformDistributionGenerator;
     UniformDistributionGenerator* udg_dist_;
     UniformDistributionGenerator* udg_rot_;
@@ -146,7 +146,7 @@ namespace pose_prediction_ism
      * @param type
      * @param identifier
      */
-    inline void addPointToPointCloud(ISM::PosePtr pose_to_add, string type, string identifier)
+    inline void addPointToPointCloud(ISM::PosePtr pose_to_add, std::string type, std::string identifier)
     {
       attributed_point_cloud_.elements.push_back(ismPosePtr2attributedPoint(pose_to_add, type, identifier));
     }
@@ -167,10 +167,10 @@ namespace pose_prediction_ism
 
     inline bool isReferenceObject(IsmObject object)
     {
-      return object.first.find("_sub") != string::npos;
+      return object.first.find("_sub") != std::string::npos;
     }
 
-    inline IsmObjectSet getObjectTypesAndIdsBelongingToPattern(string type)
+    inline IsmObjectSet getObjectTypesAndIdsBelongingToPattern(std::string type)
     {
       return table_helper_->getObjectTypesAndIdsBelongingToPattern(type);
     }
@@ -179,7 +179,7 @@ namespace pose_prediction_ism
     virtual void createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, double percentage_of_records_for_prediction) = 0;
 
   private:
-    const string NAME_SPACE_;
+    const std::string NAME_SPACE_;
     const PredictorType PREDICTOR_TYPE_;
     bool  USE_RANDOMS = false;
     double SPHERE_RADIUS = 0.0;

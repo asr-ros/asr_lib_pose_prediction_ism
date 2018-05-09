@@ -20,7 +20,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace pose_prediction_ism
 {
 
-BestPath::BestPath(string database_filename):
+BestPath::BestPath(std::string database_filename):
     PredictorWithScore::PredictorWithScore(database_filename, "best_path", Best)
 {
 }
@@ -29,7 +29,7 @@ BestPath::~BestPath()
 {
 }
 
-  AttributedPointCloud BestPath::predictUnfoundPoses(ISM::PosePtr &reference_pose, string pattern_name, double percentage_of_records_for_prediction)
+  AttributedPointCloud BestPath::predictUnfoundPoses(ISM::PosePtr &reference_pose, std::string pattern_name, double percentage_of_records_for_prediction)
 {
 
     ROS_INFO_STREAM("Pose prediction is run for scene " << pattern_name << " with " << percentage_of_records_for_prediction << " times the demonstration trajectory lengths.");
@@ -48,7 +48,7 @@ BestPath::~BestPath()
     return attributed_point_cloud_;
 }
 
-void BestPath::createBestPathMap(string type, IsmObjects predecessors)
+void BestPath::createBestPathMap(std::string type, IsmObjects predecessors)
 {
     IsmObjectSet objects_in_pattern = getObjectTypesAndIdsBelongingToPattern(type);
     for (IsmObject object : objects_in_pattern)
@@ -60,10 +60,10 @@ void BestPath::createBestPathMap(string type, IsmObjects predecessors)
                 createBestPathMap(object.first, predecessors);
             else
             {
-                Tupel<BestPathMap::iterator,bool>ret;
+                std::pair<BestPathMap::iterator,bool>ret;
                 double new_score = calculatePathScore(predecessors);
                 PathWithScore new_path_with_score(predecessors, new_score);
-                ret = best_path_map_.insert(Tupel<IsmObject, PathWithScore>(object,
+                ret = best_path_map_.insert(std::pair<IsmObject, PathWithScore>(object,
                                                                          new_path_with_score));
                 if (ret.second){
 		  specifiers_size_map_[object] = votes_.at(type)
@@ -102,11 +102,11 @@ void BestPath::createAttributedPointCloud(ISM::PosePtr pose, double percentage_o
     for (BestPathMap::iterator best_path_it = best_path_map_.begin();
          best_path_it != best_path_map_.end(); ++best_path_it )
     {
-        local_uint threshold = round(percentage_of_records_for_prediction * specifiers_size_map_[best_path_it ->first]);
+        unsigned int threshold = round(percentage_of_records_for_prediction * specifiers_size_map_[best_path_it ->first]);
         IsmObject object  = best_path_it ->first;
         PathWithScore path_with_score = best_path_it ->second;
         IsmObjects predecessors = path_with_score.first;
-        for (local_uint i = 0; i < threshold ; ++i)
+        for (unsigned int i = 0; i < threshold ; ++i)
         {
             ISM::PosePtr predicted_object_pose_ptr = predictPose(pose, predecessors);
             addPointToPointCloud(predicted_object_pose_ptr, object.first, object.second);

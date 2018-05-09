@@ -24,25 +24,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace pose_prediction_ism
 {
-/* ----------------- Primitive types ------------------  */
-typedef unsigned int local_uint;
-typedef std::string string;
-
-/* ----------------- Containers ------------------  */
-/* For more information about generic typedef look here:
- * http://stackoverflow.com/questions/3591024/typedef-alias-of-an-generic-class
- * NOTE: Needs C++ 11
- */
-template<typename Key, typename Value>
-using Map = std::map<Key, Value>;
-
-template<typename T_1, typename T_2>
-using Tupel = std::pair<T_1, T_2>;
-
-template<typename Item>
-using List = std::vector<Item>;
-template<typename Item>
-using Set = std::set<Item>;
 
 /* ----------------- Boost shared ptr ------------------  */
 template<typename Class>
@@ -50,17 +31,10 @@ using SharedPtr = boost::shared_ptr<Class>;
 
 /* ----------------- Found object ------------------  */
 typedef asr_msgs::AsrObject FoundObject;
-typedef List<FoundObject> FoundObjects;
+typedef std::vector<FoundObject> FoundObjects;
 
 /* ----------------- AttributedPointCloud ------------------  */
 typedef asr_msgs::AsrAttributedPointCloud AttributedPointCloud;
-typedef asr_msgs::AsrAttributedPoint AttributedPoint;
-
-/* ----------------- RecognitionResult ------------------  */
-typedef ISM::RecognitionResult RecognitionResult;
-typedef ISM::RecognitionResultPtr RecognitionResultPtr;
-typedef List<RecognitionResult> RecognitionResults;
-typedef List<RecognitionResultPtr> RecognitionResultPtrs;
 
 }
 

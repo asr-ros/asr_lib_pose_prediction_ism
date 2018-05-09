@@ -28,7 +28,7 @@ PaperPredictionNormalized::~PaperPredictionNormalized()
 {
 
 }
-void PaperPredictionNormalized::nonReferenceObjectProcessing(IsmObject object, ISM::VoteSpecifierPtr specifier, ISM::PosePtr &referencePose, local_uint weight)
+void PaperPredictionNormalized::nonReferenceObjectProcessing(IsmObject object, ISM::VoteSpecifierPtr specifier, ISM::PosePtr &referencePose, unsigned int weight)
 {
     using namespace ISM;
     PointPtr absPosition = GeometryHelper::getSourcePoint(referencePose,
@@ -37,7 +37,7 @@ void PaperPredictionNormalized::nonReferenceObjectProcessing(IsmObject object, I
     PosePtr absPose = GeometryHelper::getSourcePose(referencePose,
                                                    absPosition,
                                                    specifier->refToObjectPoseQuat);
-    for(local_uint i = 0; i < weight; i++)
+    for(unsigned int i = 0; i < weight; i++)
         objectPoseMap[object].push_back(absPose);
 }
 
@@ -57,9 +57,9 @@ AttributedPointCloud PaperPredictionNormalized::predictUnfoundPoses(ISM::PosePtr
 bool PaperPredictionNormalized::referenceObjectProcessing(std::string objectType,
                                                           ISM::VoteSpecifierPtr specifier,
                                                           ISM::PosePtr &referencePose,
-                                                          local_uint weight,
-                                                          local_uint specifiersSize,
-                                                          local_uint level)
+                                                          unsigned int weight,
+                                                          unsigned int specifiersSize,
+                                                          unsigned int level)
 {
     //ROS_INFO("Object %s is a reference object", objectType.c_str());
     using namespace ISM;
@@ -69,11 +69,11 @@ bool PaperPredictionNormalized::referenceObjectProcessing(std::string objectType
     PosePtr absPose = GeometryHelper::getSourcePose(referencePose,
                                                    absPosition,
                                                    specifier->refToObjectPoseQuat);
-    local_uint nextLevel = level + 1;
+    unsigned int nextLevel = level + 1;
     if(GeometryHelper::poseEqual(referencePose, absPose))
     {
         ROS_DEBUG("Object %s  is identical to the reference of the ism in which it is object", objectType.c_str());
-        local_uint numberOfHypotheses = specifiersSize * weight;
+        unsigned int numberOfHypotheses = specifiersSize * weight;
         //ROS_DEBUG_STREAM("numberOfHypotheses: " << numberOfHypotheses << " weight: " << weight << " percentage: " << percentage);
         calculateRecursiveUnfoundPoses(absPose, objectType, numberOfHypotheses, nextLevel);
         return true;
@@ -93,12 +93,12 @@ void PaperPredictionNormalized::createAttributedPointCloudFromMap(double numberO
     for (std::map<IsmObject , std::vector<ISM::PosePtr>>::iterator it=objectPoseMap.begin(); it!=objectPoseMap.end(); ++it)
     {
         IsmObject object = it->first;
-        local_uint posesSize = it->second.size();
-        local_uint specifiersSize = objectSizeMap[object];
-        local_uint threshold = round(numberOfSpecifiers * specifiersSize);
-        for (local_uint i = 0; i < threshold; ++i)
+        unsigned int posesSize = it->second.size();
+        unsigned int specifiersSize = objectSizeMap[object];
+        unsigned int threshold = round(numberOfSpecifiers * specifiersSize);
+        for (unsigned int i = 0; i < threshold; ++i)
         {
-            local_uint index = rand() % posesSize;
+            unsigned int index = rand() % posesSize;
             addPointToPointCloud(it->second.at(index), object.first, object.second);
         }
         it->second.clear();
@@ -114,8 +114,8 @@ void PaperPredictionNormalized::createAttributedPointCloud(ISM::PosePtr referenc
 
 void PaperPredictionNormalized::calculateRecursiveUnfoundPoses(ISM::PosePtr &referencePose,
                                                                std::string patternName,
-                                                               local_uint weight,
-                                                               local_uint level)
+                                                               unsigned int weight,
+                                                               unsigned int level)
 {
     IsmObjectSet objectsInPattern = getObjectTypesAndIdsBelongingToPattern(patternName);
     for (IsmObject object : objectsInPattern)
@@ -123,7 +123,7 @@ void PaperPredictionNormalized::calculateRecursiveUnfoundPoses(ISM::PosePtr &ref
         std::vector<ISM::VoteSpecifierPtr> specifiers = votes_.at(patternName).at(object.first).at(object.second);
         if(isReferenceObject(object))
         {
-            for (local_uint i = 0; i < specifiers.size(); i++)
+            for (unsigned int i = 0; i < specifiers.size(); i++)
             {
                 bool skipOtherSpecifiers = referenceObjectProcessing(object.first,
                                                                      specifiers.at(i),
@@ -141,7 +141,7 @@ void PaperPredictionNormalized::calculateRecursiveUnfoundPoses(ISM::PosePtr &ref
         else
         {
             objectSizeMap[object] = specifiers.size();
-            for (local_uint i = 0; i < specifiers.size(); i++)
+            for (unsigned int i = 0; i < specifiers.size(); i++)
                 nonReferenceObjectProcessing(object,
                                              specifiers.at(i),
                                              referencePose, weight);

@@ -19,7 +19,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace pose_prediction_ism
 {
-ShortestPath::ShortestPath(string database_filename):
+ShortestPath::ShortestPath(std::string database_filename):
     PosePredictor::PosePredictor(database_filename, "shortest_path",
                                  Shortest)
 {
@@ -28,7 +28,7 @@ ShortestPath::~ShortestPath()
 {
 }
 
-AttributedPointCloud ShortestPath::predictUnfoundPoses(ISM::PosePtr &reference_pose, string pattern_name, double percentage_of_records_for_prediction)
+AttributedPointCloud ShortestPath::predictUnfoundPoses(ISM::PosePtr &reference_pose, std::string pattern_name, double percentage_of_records_for_prediction)
 {
     ROS_DEBUG_STREAM_NAMED("ShortestPath", "ShortestPath::predictUnfoundPoses");
 
@@ -51,7 +51,7 @@ AttributedPointCloud ShortestPath::predictUnfoundPoses(ISM::PosePtr &reference_p
 
     return attributed_point_cloud_;
 }
-void ShortestPath::createShortestPathMap(string type, IsmObjects predecessors)
+void ShortestPath::createShortestPathMap(std::string type, IsmObjects predecessors)
 {
 
     IsmObjectSet objects_in_pattern = getObjectTypesAndIdsBelongingToPattern(type);
@@ -62,8 +62,8 @@ void ShortestPath::createShortestPathMap(string type, IsmObjects predecessors)
         {
             ROS_DEBUG_STREAM_NAMED("ShortestPath", "Save shortest path in map for non-reference Object: " << "(" << object.first << "," << object.second << ")");
             predecessors.push_back(object);
-            Tupel<ShortestPathMap::iterator,bool>ret;
-            ret = shortest_path_map_.insert ( Tupel<IsmObject, IsmObjects>(object, predecessors));
+            std::pair<ShortestPathMap::iterator,bool>ret;
+            ret = shortest_path_map_.insert ( std::pair<IsmObject, IsmObjects>(object, predecessors));
             if (ret.second){
                 specifiers_size_map_[object] = votes_
                         .at(type)
@@ -102,9 +102,9 @@ void ShortestPath::createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, d
     for (ShortestPathMap::iterator shortest_path_it = shortest_path_map_.begin();
          shortest_path_it != shortest_path_map_.end(); ++shortest_path_it)
     {
-        //const local_uint SIZE = specifiers_size_map_[shortest_path_it->first];
+        //const unsigned int SIZE = specifiers_size_map_[shortest_path_it->first];
 
-        local_uint threshold = ceil(percentage_of_records_for_prediction * average_votes_ * prediction_generation_factor_);
+        unsigned int threshold = ceil(percentage_of_records_for_prediction * average_votes_ * prediction_generation_factor_);
         ROS_DEBUG_NAMED("ShortesPath", "ShortesPath: generated poses, threshold: %f", ceil(percentage_of_records_for_prediction * average_votes_ * prediction_generation_factor_));
         IsmObject object  = shortest_path_it->first;
         IsmObjects predecessors = shortest_path_it->second;
@@ -114,7 +114,7 @@ void ShortestPath::createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, d
         }
 
 
-        for (local_uint i = 0; i < threshold ; ++i)
+        for (unsigned int i = 0; i < threshold ; ++i)
         {
             ISM::PosePtr object_pose_ptr = predictPose(reference_pose_ptr, predecessors);
             addPointToPointCloud(object_pose_ptr, object.first, object.second);

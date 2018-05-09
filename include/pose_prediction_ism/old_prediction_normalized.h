@@ -51,7 +51,7 @@ namespace pose_prediction_ism
          * @param weight
          * @param depth
          */
-        AttributedPointCloud predictUnfoundPoses(ISM::PosePtr& referencePose, string patternName, double percentage_of_records_for_prediction);
+        AttributedPointCloud predictUnfoundPoses(ISM::PosePtr& referencePose, std::string patternName, double percentage_of_records_for_prediction);
 
     private:
         /**
@@ -90,21 +90,21 @@ namespace pose_prediction_ism
         bool referenceObjectProcessing(std::string objectType,
                                        ISM::VoteSpecifierPtr specifier,
                                        ISM::PosePtr &referencePose,
-                                       local_uint weight,
-                                       local_uint specifiersSize,
-                                       local_uint level);
+                                       unsigned int weight,
+                                       unsigned int specifiersSize,
+                                       unsigned int level);
         void nonReferenceObjectProcessing(IsmObject object,
                                           ISM::VoteSpecifierPtr specifier,
                                           ISM::PosePtr &referencePose,
-                                          local_uint weight);
+                                          unsigned int weight);
         void calculateRecursiveUnfoundPoses(ISM::PosePtr& referencePose,
                                             std::string patternName,
-                                            local_uint weight,
-                                            local_uint level);
+                                            unsigned int weight,
+                                            unsigned int level);
         void createAttributedPointCloudFromMap(double numberOfSpecifiers);
         void createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, double percentage_of_records_for_prediction);
         std::map<IsmObject , std::vector<ISM::PosePtr>> objectPoseMap;
         SizeMap objectSizeMap;
     };
-    typedef boost::shared_ptr<PaperPredictionNormalized> PaperPredictionNormalizedPtr;
+    typedef SharedPtr<PaperPredictionNormalized> PaperPredictionNormalizedPtr;
 }

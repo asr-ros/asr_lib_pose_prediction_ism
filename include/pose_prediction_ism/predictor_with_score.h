@@ -24,12 +24,12 @@ namespace pose_prediction_ism
 class PredictorWithScore : public PosePredictor
 {
 public:
-    PredictorWithScore(string database_filename,
-                       string name_space,
+    PredictorWithScore(std::string database_filename,
+                       std::string name_space,
                        PredictorType predictor_type);
 
 protected:
-    typedef Tupel<IsmObjects, double> PathWithScore;
+    typedef std::pair<IsmObjects, double> PathWithScore;
     virtual double calculatePathScore(IsmObjects path) = 0;
 };
 typedef SharedPtr<PredictorWithScore> PredictorWithScorePtr;

@@ -20,8 +20,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "Eigen/Geometry"
 namespace pose_prediction_ism
 {
-PosePredictor::PosePredictor(string database_filename,
-                             string name_space,
+PosePredictor::PosePredictor(std::string database_filename,
+                             std::string name_space,
                              PredictorType predictor_type):
     NAME_SPACE_(name_space),
     PREDICTOR_TYPE_(predictor_type)
@@ -32,7 +32,7 @@ PosePredictor::PosePredictor(string database_filename,
 
     int counter = 0;
 
-    for(string pattern_name : table_helper_->getModelPatternNames())
+    for(std::string pattern_name : table_helper_->getModelPatternNames())
     {
         IsmObjectSet objects_in_pattern = table_helper_->getObjectTypesAndIdsBelongingToPattern(pattern_name);
         ISM::ObjectToVoteMap object_votes = table_helper_->getVoteSpecifiersForPatternAndObjects(pattern_name, objects_in_pattern);
@@ -61,10 +61,10 @@ PosePredictor::~PosePredictor()
 {
 }
 
-void PosePredictor::traverseISM(string pattern_name, local_uint level)
+void PosePredictor::traverseISM(std::string pattern_name, unsigned int level)
 {
-    string s = "";
-    for (local_uint i = 0; i < level; ++i)
+    std::string s = "";
+    for (unsigned int i = 0; i < level; ++i)
         s += "-";
     s += ">";
     ROS_DEBUG_STREAM(s << " patternName: " << pattern_name);
@@ -85,11 +85,11 @@ ISM::PosePtr PosePredictor::predictPose(ISM::PosePtr reference_pose_ptr,
          ++predecessors_it)
     {
         using namespace ISM;
-        List<VoteSpecifierPtr> specifiers = votes_
+        std::vector<VoteSpecifierPtr> specifiers = votes_
                 .at(predecessors_it->first)
                 .at((predecessors_it + 1)->first)
                 .at((predecessors_it + 1)->second);
-        local_uint index = rand() % specifiers.size();
+        unsigned int index = rand() % specifiers.size();
         VoteSpecifierPtr specifier = specifiers.at(index);
         PointPtr absolute_position = GeometryHelper::getSourcePoint(current_pose,
                                                                 specifier->refToObjectQuat,
@@ -133,7 +133,7 @@ void PosePredictor::setFoundObjects(const FoundObjects &value)
 }
 /* ----------------- Getters ------------------  */
 
-string PosePredictor::getMarkerNameSpace() const
+std::string PosePredictor::getMarkerNameSpace() const
 {
     return NAME_SPACE_;
 }
@@ -154,7 +154,7 @@ std::ostream &operator <<(std::ostream &strm, const PosePredictorPtr &pPtr)
 
 std::ostream&operator <<(std::ostream &strm, const PosePredictor &p)
 {
-    string type_string;
+    std::string type_string;
     switch (p.getPredictorType())
     {
     case Shortest:   type_string = "ShortestPath"; break;

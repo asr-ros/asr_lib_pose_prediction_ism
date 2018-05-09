@@ -51,7 +51,7 @@ namespace pose_prediction_ism
          * @param weight
          * @param depth
          */
-        AttributedPointCloud predictUnfoundPoses(ISM::PosePtr& referencePose, string patternName, double numberOfSpecifiers);
+        AttributedPointCloud predictUnfoundPoses(ISM::PosePtr& referencePose, std::string patternName, double numberOfSpecifiers);
 
     private:
         /**
@@ -85,8 +85,8 @@ namespace pose_prediction_ism
         bool nonReferenceObjectProcessing(IsmObject object,
                                           ISM::VoteSpecifierPtr specifier,
                                           ISM::PosePtr &referencePose,
-                                          local_uint weight,
-                                          local_uint specifiersSize);
+                                          unsigned int weight,
+                                          unsigned int specifiersSize);
 
         /**
          * @brief referenceObjectProcessing Processes a reference object.
@@ -124,15 +124,15 @@ namespace pose_prediction_ism
         bool referenceObjectProcessing(std::string objectType,
                                        ISM::VoteSpecifierPtr specifier,
                                        ISM::PosePtr &referencePose,
-                                       local_uint weight,
-                                       local_uint specifiersSize);
+                                       unsigned int weight,
+                                       unsigned int specifiersSize);
 
         void createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, double percentage_of_records_for_prediction);
-        void calculateRecursiveUnfoundPoses(ISM::PosePtr &referencePose, std::string patternName, local_uint weight);
-        void addPointToPointCloudWithNumber(ISM::PosePtr poseToAdd, IsmObject object, local_uint numberOfHypotheses);
+        void calculateRecursiveUnfoundPoses(ISM::PosePtr &referencePose, std::string patternName, unsigned int weight);
+        void addPointToPointCloudWithNumber(ISM::PosePtr poseToAdd, IsmObject object, unsigned int numberOfHypotheses);
 
 
     };
-    typedef boost::shared_ptr<PaperPredictionNonNormalized> PaperPredictionNonNormalizedPtr;
+    typedef SharedPtr<PaperPredictionNonNormalized> PaperPredictionNonNormalizedPtr;
 }
 

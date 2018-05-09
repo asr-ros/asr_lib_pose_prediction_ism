@@ -18,7 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "pose_prediction_ism/random_path.h"
 
 namespace pose_prediction_ism {
-RandomPath::RandomPath(string database_filename):
+RandomPath::RandomPath(std::string database_filename):
     PredictorWithScore::PredictorWithScore(database_filename, "random_path", Random)
 {
 }
@@ -27,7 +27,7 @@ RandomPath::~RandomPath()
 {
 }
 
-  AttributedPointCloud RandomPath::predictUnfoundPoses(ISM::PosePtr &reference_pose_ptr, string pattern_name, double percentage_of_records_for_prediction)
+  AttributedPointCloud RandomPath::predictUnfoundPoses(ISM::PosePtr &reference_pose_ptr, std::string pattern_name, double percentage_of_records_for_prediction)
 {
     ROS_INFO_STREAM("Pose prediction is run for scene " << pattern_name << " with " << percentage_of_records_for_prediction << " times the demonstration trajectory lengths.");
     paths_with_scores_map_.clear();
@@ -42,7 +42,7 @@ RandomPath::~RandomPath()
     return attributed_point_cloud_;
 }
 
-void RandomPath::createPathsWithScoresMap(string type,
+void RandomPath::createPathsWithScoresMap(std::string type,
                                           IsmObjects predecessors)
 {
     IsmObjectSet objects_in_pattern = getObjectTypesAndIdsBelongingToPattern(type);
@@ -55,12 +55,12 @@ void RandomPath::createPathsWithScoresMap(string type,
                 createPathsWithScoresMap(object.first, predecessors);
             else
             {
-                Tupel<PathsWithScoresMap::iterator,bool>ret;
+                std::pair<PathsWithScoresMap::iterator,bool>ret;
                 double newScore = calculatePathScore(predecessors);
                 PathWithScore newPathWithScore(predecessors,newScore);
                 PathsWithScores p;
                 p.push_back(newPathWithScore);
-                ret = paths_with_scores_map_.insert (Tupel<IsmObject, PathsWithScores>(object, p));
+                ret = paths_with_scores_map_.insert (std::pair<IsmObject, PathsWithScores>(object, p));
                 if (ret.second)
                 {
                     ROS_ASSERT_MSG(paths_with_scores_map_[object].size() == 1,
@@ -71,7 +71,7 @@ void RandomPath::createPathsWithScoresMap(string type,
                 }
                 else
                 {
-                    local_uint oldLength = paths_with_scores_map_[object].size();
+                    unsigned int oldLength = paths_with_scores_map_[object].size();
                     paths_with_scores_map_[object].push_back(newPathWithScore);
                     ROS_ASSERT_MSG(paths_with_scores_map_[object].size() == 1 + oldLength,
                             "New path was not inserted");
@@ -90,8 +90,8 @@ void RandomPath::createPathsWithScoresMap(string type,
     for (PathsWithScoresMap::iterator paths_it = paths_with_scores_map_.begin();
          paths_it != paths_with_scores_map_.end(); ++paths_it)
     {
-        const local_uint SIZE = specifiers_size_map_[paths_it->first];
-        local_uint threshold = round(percentage_of_records_for_prediction * SIZE);
+        const unsigned int SIZE = specifiers_size_map_[paths_it->first];
+        unsigned int threshold = round(percentage_of_records_for_prediction * SIZE);
         IsmObject object  = paths_it->first;
         PathsWithScores paths_with_scores = paths_it->second;
 
@@ -99,7 +99,7 @@ void RandomPath::createPathsWithScoresMap(string type,
         Slots percentage_slots;
         if (has_choice_for_path)
             percentage_slots = slots_map_[object];
-        for (local_uint i = 0; i < threshold ; ++i)
+        for (unsigned int i = 0; i < threshold ; ++i)
         {
             IsmObjects predecessors;
             if (has_choice_for_path)

@@ -25,22 +25,22 @@ namespace pose_prediction_ism
 class RandomPath: public PredictorWithScore
 {
 public:
-    RandomPath(string database_filename);
+    RandomPath(std::string database_filename);
     ~RandomPath();
-    AttributedPointCloud predictUnfoundPoses(ISM::PosePtr &reference_pose, string pattern_name, double percentage_of_records_for_prediction);
+    AttributedPointCloud predictUnfoundPoses(ISM::PosePtr &reference_pose, std::string pattern_name, double percentage_of_records_for_prediction);
 
 private:
-    typedef List<double> Slots;
-    typedef Map<IsmObject ,  Slots> SlotsMap;
-    typedef List<PathWithScore> PathsWithScores;
-    typedef Map<IsmObject , PathsWithScores> PathsWithScoresMap;
+    typedef std::vector<double> Slots;
+    typedef std::map<IsmObject ,  Slots> SlotsMap;
+    typedef std::vector<PathWithScore> PathsWithScores;
+    typedef std::map<IsmObject , PathsWithScores> PathsWithScoresMap;
 
     /* ----------------- Private members ------------------  */
     PathsWithScoresMap paths_with_scores_map_;
     SlotsMap slots_map_;
 
     /* ----------------- Functions ------------------  */
-    void createPathsWithScoresMap(string type, IsmObjects predecessors);
+    void createPathsWithScoresMap(std::string type, IsmObjects predecessors);
     void createAttributedPointCloud(ISM::PosePtr reference_pose_ptr, double percentage_of_records_for_prediction);
     void createSlotsMap();
     double calculatePathScore(IsmObjects path);

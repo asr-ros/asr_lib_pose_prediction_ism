@@ -19,7 +19,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace pose_prediction_ism
 {
 
-PredictorWithScore::PredictorWithScore(string database_filename, string name_space,
+PredictorWithScore::PredictorWithScore(std::string database_filename, std::string name_space,
                                        PredictorType predictor_type):
     PosePredictor::PosePredictor(database_filename, name_space, predictor_type)
 {
